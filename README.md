@@ -1,5 +1,5 @@
 # Query Combinator
-The query combinator ets up and generates all possible combinations of queries based on a provided configuration by concatenating a URL with all combinatory outputs that result from mixing parameters.
+The query combinator sets up and generates all possible combinations of queries based on a provided configuration by concatenating a URL with all combinatory outputs that result from mixing parameters.
 
 ## Prerequisites
 In order to use the class, __Node.js__ needs to be installed on your machine, to do so, please visit the [Node.js downloads page](https://nodejs.org/en/download/package-manager/) and install the right package for your system.
