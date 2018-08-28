@@ -9,7 +9,7 @@
  *
  * Exmaple usage:
  * QueryGen.query('Sales')
- *         .host('http://localhost:9999')
+ *         .host('http://localhost:8080')
  *         .url('/sales')
  *         .fixParam('sku', '1232456')
  *         .mixParam('class', ['c1', 'c2'])
