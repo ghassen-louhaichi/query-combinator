@@ -1,0 +1,64 @@
+#---------------------------------------------------------#
+# This script generates the test queries and runs them    #
+# A benchmark report is created at the end of the run     #
+#---------------------------------------------------------#
+
+#########
+# SETUP #
+#########
+
+time=/usr/bin/time
+
+# Check for GEN_HOME
+if [[ -z "$GEN_HOME" ]]; then
+    echo "GEN_HOME is not set, please source env.sh from the root directory."
+    exit 1
+fi
+
+#############
+# FUNCTIONS #
+#############
+
+cleanup() {
+    rm -f $GEN_HOME/queries
+}
+
+generate-queries() {
+    cleanup
+    touch $GEN_HOME/queries
+    node $GEN_HOME/example/queryConfig.js > $GEN_HOME/queries
+}
+
+execute-query() {
+    query=$1
+    if [[ -z "$query" ]]; then
+        echo "No query supplied"
+        return 0
+    fi
+    echo "Running GET $query"
+    $time -v curl -X GET -i -H "Accept: application/json" $query
+    echo "--------------------------------------------------"
+}
+
+run() {
+    if [[ -e "$GEN_HOME/queries" ]]; then
+        rm -f $GEN_HOME/report
+        echo "Running $(wc -l < $GEN_HOME/queries) queries" | tee -a $GEN_HOME/report
+        while IFS='' read -r line || [[ -n "$line" ]]; do
+            execute-query $line 2>&1 | tee -a $GEN_HOME/report
+        done < "$GEN_HOME/queries"
+        echo "Please find the report file under $GEN_HOME/report" | tee -a $GEN_HOME/report
+    else
+        echo "Queries file does not exist."
+        cleanup
+        exit 1
+    fi
+}
+
+#############
+# EXECUTION #
+#############
+
+generate-queries
+run
+cleanup
